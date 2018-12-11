@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: hong-redis
+  profiles:
+    active: test
+
+  http:
+    encoding:
+      charset: UTF-8
+
+server:
+  port: 9527
+  servlet:
+    context-path: /
+
+debug: false
