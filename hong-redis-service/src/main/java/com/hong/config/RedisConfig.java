@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 
 /**
  * <br>Sprig Boot Redis配置类</br>
- *
+ *  继承CachingConfigurerSupport并重写方法，配合@EnableCaching注解实现spring缓存框架的使用
  */
 @Configuration
 @EnableCaching
