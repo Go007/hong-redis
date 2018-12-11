@@ -12,3 +12,6 @@ https://juejin.im/post/5bf3f15851882526a643e207
 https://my.oschina.net/yunqi/blog/1838873
 
 # Spring Boot使用Spring data redis操作Redis(单机/集群)
+
+# Redis分布式锁
+https://my.oschina.net/dengfuwei/blog/1600681

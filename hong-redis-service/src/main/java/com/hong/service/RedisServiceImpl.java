@@ -84,7 +84,6 @@ public class RedisServiceImpl implements RedisService{
         });
     }
 
-
     @Override
     public String getStr(String key, boolean retain) {
         String value = stringRedisTemplate.boundValueOps(key).get();
