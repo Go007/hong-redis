@@ -1,6 +1,7 @@
 package com.hong.lock;
 
 import com.hong.annotations.LockAction;
+import com.hong.annotations.RedisParameterLocked;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -16,6 +17,8 @@ import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
@@ -45,7 +48,10 @@ public class DistributedLockAspect {
 		String key = lockAction.value();
 		Object[] args = pjp.getArgs();
 		key = parse(key, method, args);
-		
+
+		Annotation[][] annotations = method.getParameterAnnotations();
+		//redisKey += getLockedObject(annotations, args);
+
 		int retryTimes = lockAction.action().equals(LockAction.LockFailAction.CONTINUE) ? lockAction.retryTimes() : 0;
 		boolean lock = distributedLock.lock(key, lockAction.keepMills(), retryTimes, lockAction.sleepMills());
 		if(!lock) {
@@ -81,5 +87,25 @@ public class DistributedLockAspect {
 			context.setVariable(params[i], args[i]);
 		}
 		return parser.parseExpression(key).getValue(context, String.class);
+	}
+
+	/**
+	 * 锁细粒度控制，获取方法锁参数
+	 * @param annotations
+	 * @param args
+	 * @return
+	 * @throws NoSuchFieldException
+     */
+	private String getLockedObject(Annotation[][] annotations, Object[] args)
+			throws NoSuchFieldException {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < annotations.length; i++) {
+			for (int j = 0; j < annotations[i].length; j++) {
+				if (annotations[i][j] instanceof RedisParameterLocked) {
+					sb.append(args[i].toString());
+				}
+			}
+		}
+		return sb.toString();
 	}
 }
