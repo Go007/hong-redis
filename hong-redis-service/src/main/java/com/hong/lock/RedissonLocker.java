@@ -36,7 +36,7 @@ public class RedissonLocker {
     public <T> T lock(String resourceName, RedisLockWorker<T> worker, long lockTime) {
         RedissonClient redisson = redissonConnector.getClient();
         RLock lock = redisson.getLock(LOCKER_PREFIX + resourceName);
-        boolean success = false;
+        boolean success;
         try {
             success = lock.tryLock(WAIT_TIME, lockTime, TimeUnit.MICROSECONDS);
         } catch (InterruptedException e) {

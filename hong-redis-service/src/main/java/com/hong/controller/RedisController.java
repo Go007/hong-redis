@@ -4,15 +4,15 @@ import com.hong.common.bean.Result;
 import com.hong.entity.User;
 import com.hong.lock.DistributedLock;
 import com.hong.lock.RedissonLocker;
+import com.hong.service.RedisService;
 import com.hong.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,6 +35,9 @@ public class RedisController {
 
     @Resource
     private RedissonLocker redissonLocker;
+
+    @Autowired
+    private RedisService redisService;
 
     @RequestMapping("user/{id}")
     public Result save(@PathVariable long id) {
@@ -110,4 +113,35 @@ public class RedisController {
         return Result.buildSuccess();
     }
 
+    /**
+     * 模拟还款业务需求:还款频率限制,不能频繁还款,用户1min内只能还一次
+     */
+    @RequestMapping(value = "/repayment/notifyRepaymentSucceed", method = RequestMethod.POST)
+    public Result notifyRepaymentSucceed(@RequestBody Map<String,Object> paramMap){
+        // 1.校验还款订单状态
+        // 2.生成订单标识，限制只能1min(配置文件中；默认配置静态变量中；)后再次生成订单；
+        redisService.set(paramMap.get("idPerson") + ":repayment",paramMap.get("orderNo"), 60);
+        // 3.配账
+        return Result.buildSuccess();
+    }
+
+    @RequestMapping(value = "/repayment/createRepaymentOrder", method = RequestMethod.POST)
+    public Result createRepaymentOrder(@RequestBody Map<String,Object> paramMap){
+        Result result = new Result();
+        String orderNo = redisService.getStr(paramMap.get("idPerson") + ":repayment");
+        if (StringUtils.isNotEmpty(orderNo)){
+            result.setMessage("该合同正在配账中，避免重复还款，请5-10分钟后再试");
+        }
+        return result;
+    }
+
+    /**
+     *  使用Redis分布式锁解决,本质是限制用户在1min内不能重复提交订单
+     */
+    @RequestMapping(value = "/repayment/createRepaymentOrder2", method = RequestMethod.POST)
+    public Result createRepaymentOrder2(@RequestBody Map<String,Object> paramMap){
+        Result result = new Result();
+        userService.submitRepaymentOrder(paramMap);
+        return result;
+    }
 }

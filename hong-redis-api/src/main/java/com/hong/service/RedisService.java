@@ -70,7 +70,7 @@ public interface RedisService {
      *
      * @param time 默认为秒
      */
-     void set(String key, Object value, int time);
+     void set(String key, Object value, long time);
 
     /**
      * 将value对象写入缓存(默认时间)

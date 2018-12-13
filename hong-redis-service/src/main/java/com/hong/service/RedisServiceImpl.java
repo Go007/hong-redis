@@ -106,7 +106,7 @@ public class RedisServiceImpl implements RedisService{
     }
 
     @Override
-    public void set(String key, Object value, int time) {
+    public void set(String key, Object value, long time) {
         boolean flag = true;
         if (value.getClass().equals(String.class)) {
             stringRedisTemplate.opsForValue().set(key, value.toString());
