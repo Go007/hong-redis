@@ -32,7 +32,7 @@ public class RedisDistributedLock extends AbstractDistributedLock {
     /**
      * 将锁与持有者线程绑定,确保每个线程只释放自己的锁,而不会因为异常情况误删其他线程的锁
      */
-    private ThreadLocal<String> lockFlag = new ThreadLocal<String>();
+    private ThreadLocal<String> lockFlag = new ThreadLocal<>();
 
     /**
      * 使用Lua脚本保证锁释放操作的原子性

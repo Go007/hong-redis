@@ -47,10 +47,10 @@ public @interface LockAction {
     int retryTimes() default 3;
 
     /**
-     * 是否在方法执行完后自动释放锁
-     * true:方法执行完后自动释放锁,即使此时锁还没有到设定的过期时间
-     * false:不自动释放锁,等待锁的过期时间到后释放
+     * 是否在方法执行完后手动触发释放锁
+     * true:方法执行完后手动触发释放锁,即使此时锁还没有到设定的过期时间
+     * false:自动释放锁,等待锁的过期时间到后自动释放
      * @return
      */
-    boolean isAutoReleaseLock() default true;
+    boolean isManualReleaseLock() default true;
 }

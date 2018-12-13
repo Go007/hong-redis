@@ -30,7 +30,7 @@ public class UserService {
         userMapper.updateCount(1L,count,new Date());
     }
 
-    @LockAction(value = "updateCount:",keepMills = 5000,isAutoReleaseLock = false)
+    @LockAction(value = "updateCount:",keepMills = 5000,isManualReleaseLock = false)
     public void submit(@RedisParameterLocked Long userId){
         /**
          * 模拟场景:限制同一个用户在5s内只能给自己的计数值+1

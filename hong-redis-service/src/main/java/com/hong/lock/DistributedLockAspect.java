@@ -76,9 +76,9 @@ public class DistributedLockAspect {
 			throw e;
 		}
 
-		boolean autoReleaseLock = lockAction.isAutoReleaseLock();
-
-		if (autoReleaseLock){
+		boolean isManualReleaseLock = lockAction.isManualReleaseLock();
+		// 手动触发释放锁
+		if (isManualReleaseLock){
 			boolean releaseResult = distributedLock.releaseLock(key);
 			logger.debug("release lock : " + key + (releaseResult ? " success" : " failed"));
 		}
