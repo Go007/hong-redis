@@ -3,6 +3,7 @@ package com.hong.controller;
 import com.hong.common.bean.Result;
 import com.hong.entity.User;
 import com.hong.lock.DistributedLock;
+import com.hong.lock.RedissonLocker;
 import com.hong.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -31,6 +32,9 @@ public class RedisController {
     private DistributedLock redisDistributedLock;
 
     private static Long count = 0L;
+
+    @Resource
+    private RedissonLocker redissonLocker;
 
     @RequestMapping("user/{id}")
     public Result save(@PathVariable long id) {
@@ -74,7 +78,13 @@ public class RedisController {
                             /*redisDistributedLock.lock("lockKey", 20, 0, 0);
                             count++;*/
 
-                            userService.updateCount();
+                            //userService.updateCount();
+
+                            // 测试Redisson分布式锁
+                            redissonLocker.lock("lockKey",() -> {
+                                count++;
+                                return null;
+                            },30);
 
                             countDownLatch2.countDown();
                         }
