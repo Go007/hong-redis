@@ -15,3 +15,6 @@ https://my.oschina.net/yunqi/blog/1838873
 
 # Redis分布式锁
 https://my.oschina.net/dengfuwei/blog/1600681
+
+# spring aop注解失效之谜
+https://blog.csdn.net/u012373815/article/details/77345655

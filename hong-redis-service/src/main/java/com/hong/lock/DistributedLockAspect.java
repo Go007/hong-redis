@@ -38,6 +38,9 @@ public class DistributedLockAspect {
 
 	private LocalVariableTableParameterNameDiscoverer discoverer = new LocalVariableTableParameterNameDiscoverer();
 
+	/**
+	 * 针对类的切点使用@within ， @annotation是针对方法的
+	 */
 	@Pointcut("@annotation(com.hong.annotations.LockAction)")
 	private void lockPoint(){ }
 	
@@ -47,9 +50,9 @@ public class DistributedLockAspect {
 		LockAction lockAction = method.getAnnotation(LockAction.class);
 		String key = lockAction.value();
 		Object[] args = pjp.getArgs();
-		key = parse(key, method, args);
+		//key = parse(key, method, args);
 
-		Annotation[][] annotations = method.getParameterAnnotations();
+		//Annotation[][] annotations = method.getParameterAnnotations();
 		//redisKey += getLockedObject(annotations, args);
 
 		int retryTimes = lockAction.action().equals(LockAction.LockFailAction.CONTINUE) ? lockAction.retryTimes() : 0;

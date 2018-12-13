@@ -4,12 +4,13 @@
 
     <resultMap id="BaseResultMap" type="com.hong.entity.User">
         <id column="id" property="id" jdbcType="BIGINT" />
-        <result column="username" property="username" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
         <result column="password" property="password" jdbcType="BIGINT" />
+        <result column="count" property="count" jdbcType="BIGINT" />
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,username,password
+        id,name,password,count
     </sql>
 
     <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long">
@@ -17,4 +18,10 @@
         FROM user
         WHERE id = #{id,jdbcType=BIGINT}
     </select>
+
+    <update id="updateCount" >
+        update user t
+        set t.count = #{count}
+        where t.id = #{id}
+</update>
 </mapper>
