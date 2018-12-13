@@ -94,4 +94,10 @@ public class RedisController {
         return result;
     }
 
+    @GetMapping("/testLock/{userId}")
+    public Result testLock(@PathVariable Long userId) {
+        userService.submit(userId);
+        return Result.buildSuccess();
+    }
+
 }

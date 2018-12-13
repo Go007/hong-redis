@@ -36,6 +36,9 @@ public class DistributedLockAspect {
 	
 	private ExpressionParser parser = new SpelExpressionParser();
 
+	/**
+	 * 获取方法的参数名
+	 */
 	private LocalVariableTableParameterNameDiscoverer discoverer = new LocalVariableTableParameterNameDiscoverer();
 
 	/**
@@ -50,10 +53,11 @@ public class DistributedLockAspect {
 		LockAction lockAction = method.getAnnotation(LockAction.class);
 		String key = lockAction.value();
 		Object[] args = pjp.getArgs();
+
 		//key = parse(key, method, args);
 
-		//Annotation[][] annotations = method.getParameterAnnotations();
-		//redisKey += getLockedObject(annotations, args);
+		Annotation[][] annotations = method.getParameterAnnotations();
+		key += getLockedObject(annotations, args);
 
 		int retryTimes = lockAction.action().equals(LockAction.LockFailAction.CONTINUE) ? lockAction.retryTimes() : 0;
 		boolean lock = distributedLock.lock(key, lockAction.keepMills(), retryTimes, lockAction.sleepMills());
@@ -64,15 +68,22 @@ public class DistributedLockAspect {
 		
 		//得到锁,执行方法，释放锁
 		logger.debug("get lock success : " + key);
+		Object result = null;
 		try {
-			return pjp.proceed();
+			result = pjp.proceed();
 		} catch (Exception e) {
 			logger.error("execute locked method occured an exception", e);
 			throw e;
-		} finally {
+		}
+
+		boolean autoReleaseLock = lockAction.isAutoReleaseLock();
+
+		if (autoReleaseLock){
 			boolean releaseResult = distributedLock.releaseLock(key);
 			logger.debug("release lock : " + key + (releaseResult ? " success" : " failed"));
 		}
+
+		return result;
 	}
 	
 	/**
@@ -85,6 +96,7 @@ public class DistributedLockAspect {
 	 */
 	private String parse(String key, Method method, Object[] args) {
 		String[] params = discoverer.getParameterNames(method);
+		// Expression是从指定的上下文(EvaluationContext)中获取相应的内容
 		EvaluationContext context = new StandardEvaluationContext();
 		for (int i = 0; i < params.length; i ++) {
 			context.setVariable(params[i], args[i]);

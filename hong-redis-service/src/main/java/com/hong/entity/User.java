@@ -1,11 +1,14 @@
 package com.hong.entity;
 
+import java.util.Date;
+
 public class User {
 
     private Long id;
     private String name;
     private Long password;
     private Long count;
+    private Date updateTime;
 
     public Long getId() {
         return id;
@@ -37,5 +40,13 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

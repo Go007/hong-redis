@@ -15,9 +15,6 @@ public @interface LockAction {
     @AliasFor("key")
     String value() default "'default'";
 
-    @AliasFor("value")
-    String key() default "'default'";
-
     /**
      * 持锁时间,单位毫秒
      */
@@ -48,4 +45,12 @@ public @interface LockAction {
      * 重试次数
      */
     int retryTimes() default 3;
+
+    /**
+     * 是否在方法执行完后自动释放锁
+     * true:方法执行完后自动释放锁,即使此时锁还没有到设定的过期时间
+     * false:不自动释放锁,等待锁的过期时间到后释放
+     * @return
+     */
+    boolean isAutoReleaseLock() default true;
 }

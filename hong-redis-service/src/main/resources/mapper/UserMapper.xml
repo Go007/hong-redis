@@ -21,7 +21,8 @@
 
     <update id="updateCount" >
         update user t
-        set t.count = #{count}
+        set t.count = #{count},
+        t.update_time = #{updatetime}
         where t.id = #{id}
 </update>
 </mapper>
