@@ -71,7 +71,7 @@ public class RedisCacheAspect {
         Object result = null;
         String redisResult = null;
         if (!redisService.exists(cacheKey)) {
-            logger.info("缓存key[{}]未命中", cacheKey);
+            logger.info("缓存未命中,key为[{}]", cacheKey);
             result = pjp.proceed(args);
             if (result != null) {
                 // 序列化查询结果
@@ -91,8 +91,8 @@ public class RedisCacheAspect {
                 // 序列化结果是普通对象
                 result = JSON.parseObject(redisResult, clazz);
             }
+            logger.info("缓存命中，key为[{}]，result为[{}]", cacheKey, result);
         }
-        logger.info("缓存命中，key为[{}]，result为[{}]", cacheKey, result);
         return result;
     }
 
