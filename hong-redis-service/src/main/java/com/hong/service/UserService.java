@@ -2,6 +2,7 @@ package com.hong.service;
 
 import com.hong.annotations.LockAction;
 import com.hong.annotations.RedisParameterLocked;
+import com.hong.common.bean.Result;
 import com.hong.entity.User;
 import com.hong.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,10 @@ public class UserService {
         userMapper.updateCount(userId, count , new Date());
     }
 
-    public void submitRepaymentOrder(Map<String, Object> paramMap) {
+    @LockAction(value="repayment:",keepMills = 60*1000,msg = "正在配账中，避免重复还款，请5-10分钟后再试",isManualReleaseLock = false)
+    public Result submitRepaymentOrder(@RedisParameterLocked Integer idPerson) {
+        Result result = new Result();
 
+        return result;
     }
 }

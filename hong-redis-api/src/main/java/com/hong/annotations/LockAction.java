@@ -53,4 +53,6 @@ public @interface LockAction {
      * @return
      */
     boolean isManualReleaseLock() default true;
+
+    String msg() default "";
 }

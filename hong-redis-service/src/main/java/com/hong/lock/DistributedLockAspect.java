@@ -2,6 +2,7 @@ package com.hong.lock;
 
 import com.hong.annotations.LockAction;
 import com.hong.annotations.RedisParameterLocked;
+import com.hong.common.bean.Result;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -63,7 +64,10 @@ public class DistributedLockAspect {
 		boolean lock = distributedLock.lock(key, lockAction.keepMills(), retryTimes, lockAction.sleepMills());
 		if(!lock) {
 			logger.debug("get lock failed : " + key);
-			return null;
+			/**
+			 * 这里要注意返回的结构要遵循外层调用接口声明的返回值,可以统一接口的返回结构为Result
+			 */
+			return Result.buildFailed(lockAction.msg());
 		}
 		
 		//得到锁,执行方法，释放锁

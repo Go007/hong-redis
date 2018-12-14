@@ -140,8 +140,6 @@ public class RedisController {
      */
     @RequestMapping(value = "/repayment/createRepaymentOrder2", method = RequestMethod.POST)
     public Result createRepaymentOrder2(@RequestBody Map<String,Object> paramMap){
-        Result result = new Result();
-        userService.submitRepaymentOrder(paramMap);
-        return result;
+        return userService.submitRepaymentOrder((Integer) paramMap.get("idPerson"));
     }
 }
