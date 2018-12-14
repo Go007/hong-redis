@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * <br>Redis Cache注解</br>
  */
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RedisCacheable {
 
