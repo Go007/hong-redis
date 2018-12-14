@@ -10,6 +10,7 @@ import org.springframework.data.redis.connection.StringRedisConnection;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import redis.clients.jedis.Jedis;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
@@ -455,4 +456,8 @@ public class RedisServiceImpl implements RedisService{
         redisTemplate.opsForHash().putAll(key, map);
     }
 
+    @Override
+    public boolean exists(String key) {
+        return redisTemplate.hasKey(key);
+    }
 }

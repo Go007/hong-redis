@@ -26,4 +26,4 @@ Spring Cache默认是不支持在@Cacheable上添加过期时间的，可以在�
 # @Cacheable、@CacheEvict、@CachePut https://blog.csdn.net/dreamhai/article/details/80642010
 
 # Spring Cache在缓存失效前自动刷新
-https://github.com/yantrashala/spring-cache-self-refresh
+https://www.cnblogs.com/ASPNET2008/p/6511500.html

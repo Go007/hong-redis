@@ -1,6 +1,7 @@
 package com.hong.service;
 
 import com.hong.annotations.LockAction;
+import com.hong.annotations.RedisCacheable;
 import com.hong.annotations.RedisParameterLocked;
 import com.hong.common.bean.Result;
 import com.hong.entity.User;
@@ -9,8 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.security.Key;
 import java.util.Date;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserService {
@@ -53,10 +55,12 @@ public class UserService {
 
     /**
      * @Cacheable value属性是必须指定的,其表示当前方法的返回值是会被缓存在哪个Cache上
+     * @Cacheable 不能指定特定的过期时间
      * @param userId
      * @return
      */
-    @Cacheable(value = "user")
+    // @Cacheable(value = "user")
+    @RedisCacheable(value = "user",cacheTime = 5,timeUnit = TimeUnit.MINUTES,type = Result.class)
     public Result getUser(Long userId) {
         Result result = new Result();
         User user = userMapper.selectById(userId);

@@ -364,4 +364,5 @@ public interface RedisService {
      */
     void hMSet(String key, Map map);
 
+    boolean exists(String key);
 }

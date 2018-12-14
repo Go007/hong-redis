@@ -37,6 +37,9 @@ public class RedisConfig extends CachingConfigurerSupport {
     public static final String NO_PARAM_KEY = "NO_PARAM";
     public static final String NULL_PARAM_KEY = "NULL_PARAM";
 
+    //全局的默认缓存时间 5min
+    public static final long DEFALUT_CACHE_TIME = 5*60*1000;
+
     @SuppressWarnings("rawtypes")
     @Bean
     public CacheManager cacheManager(RedisTemplate redisTemplate) {
@@ -45,8 +48,11 @@ public class RedisConfig extends CachingConfigurerSupport {
          * 这里用的是Redis,所以是RedisCacheManager
          */
         RedisCacheManager rcm = new RedisCacheManager(redisTemplate);
-        //设置统一的缓存过期时间
-        //rcm.setDefaultExpiration(60);//秒
+        /**
+         *  设置默认的缓存过期时间
+         *  因为 @Cacheable 注解本身不支持配置过期时间,这里设置一个全局的过期时间
+         */
+        rcm.setDefaultExpiration(DEFALUT_CACHE_TIME);//秒
         // 也可以在Map中给不同的key设置对应的过期时间
         /*Map<String,Long> keyExpireMap = new HashMap<>();
         keyExpireMap.put("key",1000L);
