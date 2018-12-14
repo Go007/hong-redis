@@ -142,4 +142,12 @@ public class RedisController {
     public Result createRepaymentOrder2(@RequestBody Map<String,Object> paramMap){
         return userService.submitRepaymentOrder((Integer) paramMap.get("idPerson"));
     }
+
+    /**
+     * 测试Spring-cache
+     */
+    @GetMapping("/getUser/{userId}")
+    public Result getUser(@PathVariable Long userId){
+        return userService.getUser(userId);
+    }
 }

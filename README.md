@@ -18,3 +18,12 @@ https://my.oschina.net/dengfuwei/blog/1600681
 
 # spring aop注解失效之谜
 https://blog.csdn.net/u012373815/article/details/77345655
+
+# Spring-boot 中使用 AOP 和 Redis搭建缓存框架
+https://www.jianshu.com/p/b1d6f0c53362
+
+Spring Cache默认是不支持在@Cacheable上添加过期时间的，可以在配置缓存容器时统一指定,但这样就达不到特殊化定制了.
+# @Cacheable、@CacheEvict、@CachePut https://blog.csdn.net/dreamhai/article/details/80642010
+
+# Spring Cache在缓存失效前自动刷新
+https://github.com/yantrashala/spring-cache-self-refresh

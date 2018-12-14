@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.TimeUnit;
 
 /**
- * <br>Ridiss实现的Redis分布式锁</br>
+ * <br>Ridisson实现的Redis分布式锁</br>
  */
 @Component
 public class RedissonLocker {

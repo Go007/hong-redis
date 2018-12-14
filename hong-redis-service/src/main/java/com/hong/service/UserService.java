@@ -6,6 +6,7 @@ import com.hong.common.bean.Result;
 import com.hong.entity.User;
 import com.hong.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -47,6 +48,19 @@ public class UserService {
     public Result submitRepaymentOrder(@RedisParameterLocked Integer idPerson) {
         Result result = new Result();
 
+        return result;
+    }
+
+    /**
+     * @Cacheable value属性是必须指定的,其表示当前方法的返回值是会被缓存在哪个Cache上
+     * @param userId
+     * @return
+     */
+    @Cacheable(value = "user")
+    public Result getUser(Long userId) {
+        Result result = new Result();
+        User user = userMapper.selectById(userId);
+        result.setData(user);
         return result;
     }
 }
