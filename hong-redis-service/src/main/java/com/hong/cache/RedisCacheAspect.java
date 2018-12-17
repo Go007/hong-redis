@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Aspect
@@ -73,12 +74,17 @@ public class RedisCacheAspect {
         if (!redisService.exists(cacheKey)) {
             logger.info("缓存未命中,key为[{}]", cacheKey);
             result = pjp.proceed(args);
-            if (result != null) {
+            if (Objects.nonNull(result)) {
                 // 序列化查询结果
                 redisResult = JSON.toJSONString(result);
                 // 序列化结果放入缓存
-                redisService.set(cacheKey, redisResult, cacheTime);
             }
+            /**
+             * 缓存穿透：查询数据不存在DB中从而cache中也不存在，查询操作频繁落入DB中而导致DB压力过大；为了避免此问题有如下解决方案：
+             * ①  存null值：查询DB为空时，依然存 key – null √
+             * ②  布隆过滤：维护一张存在缓存key的bitmap表，查询时进行filter过滤
+             */
+            redisService.set(cacheKey, redisResult, cacheTime);
         } else {
             Class modelType = redisCache.type();
             redisResult = redisService.getStr(cacheKey);
