@@ -131,7 +131,7 @@ public class RedisDistributedLock extends AbstractDistributedLock {
         } finally {
             // 清除掉ThreadLocal中的数据，避免内存溢出
             lockFlag.remove();
-            logger.info("release lock : " + key);
+            logger.info(Thread.currentThread().getName() + " release lock : " + key);
         }
         return false;
     }
