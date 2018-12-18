@@ -59,7 +59,9 @@ public class DistributedLockAspect {
 	public Object around(ProceedingJoinPoint pjp,LockAction lockAction) throws Throwable{
 		/**
 		 * Method method = ((MethodSignature) pjp.getSignature()).getMethod();
-		 * TODO 这种方式当目标类存在接口时,获取不到目标类方法上的注解,没搞明白啥原因?
+		 * TODO 这种方式当目标类存在接口时,获取不到目标类方法上的注解
+		 *  https://www.cnblogs.com/zhaoxinshanwei/p/6046484.html
+		 *  https://www.cnblogs.com/qiumingcheng/p/5923928.html
 		 * LockAction lockAction = method.getAnnotation(LockAction.class);
 		 */
 		Method method = ((MethodSignature) pjp.getSignature()).getMethod();
