@@ -67,7 +67,7 @@ public class RedisDistributedLock extends AbstractDistributedLock {
             }
             result = setRedis(key, expire);
         }
-        logger.info(result ? "get lock success : " + key : "get lock failed : " + key);
+        logger.info(result ? Thread.currentThread().getName() + " get lock success : " + key : Thread.currentThread().getName() + " get lock failed : " + key);
         return result;
     }
 
@@ -91,7 +91,7 @@ public class RedisDistributedLock extends AbstractDistributedLock {
             });
             return !StringUtils.isEmpty(result);
         } catch (Exception e) {
-            logger.error("set redis occured an exception", e);
+            logger.error(Thread.currentThread() + " set redis occured an exception", e);
         }
         return false;
     }
@@ -127,7 +127,7 @@ public class RedisDistributedLock extends AbstractDistributedLock {
             }
             return result != null && result > 0;
         } catch (Exception e) {
-            logger.error("release lock occured an exception", e);
+            logger.error(Thread.currentThread().getName() + " release lock occured an exception", e);
         } finally {
             // 清除掉ThreadLocal中的数据，避免内存溢出
             lockFlag.remove();
