@@ -21,7 +21,7 @@ public class RedissonLocker {
     private final static String LOCKER_PREFIX = "lock:";
 
     // 锁的有效时间
-    private final static long LOCKER_TIME = 3000;
+    private final static long LOCKER_TIME = 30000;
 
     // 获取锁最长等待时间
     private final static long WAIT_TIME = 30;
