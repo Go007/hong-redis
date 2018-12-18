@@ -3,7 +3,9 @@ package com.hong.lock;
 import com.hong.annotations.LockAction;
 import com.hong.annotations.RedisParameterLocked;
 import com.hong.common.bean.Result;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -12,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.expression.EvaluationContext;
@@ -37,6 +40,9 @@ public class DistributedLockAspect {
 	
 	private ExpressionParser parser = new SpelExpressionParser();
 
+	@Autowired
+	private KeyGenerator keyGenerator;
+
 	/**
 	 * 获取方法的参数名
 	 */
@@ -54,11 +60,14 @@ public class DistributedLockAspect {
 		LockAction lockAction = method.getAnnotation(LockAction.class);
 		String key = lockAction.value();
 		Object[] args = pjp.getArgs();
-
-		//key = parse(key, method, args);
-
-		Annotation[][] annotations = method.getParameterAnnotations();
-		key += getLockedObject(annotations, args);
+		// 如果不特别指定key,则自动生成key
+		if (StringUtils.isBlank(key)){
+			key = keyGenerator.generate(pjp.getTarget(),method,args).toString();
+		}else {
+			//key = parse(key, method, args);
+			Annotation[][] annotations = method.getParameterAnnotations();
+			key += getLockedObject(annotations, args);
+		}
 
 		int retryTimes = lockAction.action().equals(LockAction.LockFailAction.CONTINUE) ? lockAction.retryTimes() : 0;
 		boolean lock = distributedLock.lock(key, lockAction.keepMills(), retryTimes, lockAction.sleepMills());

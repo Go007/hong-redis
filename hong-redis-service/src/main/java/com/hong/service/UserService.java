@@ -45,7 +45,8 @@ public class UserService {
         userMapper.updateCount(userId, count, new Date());
     }
 
-    @LockAction(value = "repayment:", keepMills = 60 * 1000, msg = "正在配账中，避免重复还款，请5-10分钟后再试", isManualReleaseLock = false)
+    //@LockAction(value = "repayment:", keepMills = 60 * 1000, msg = "正在配账中，避免重复还款，请5-10分钟后再试", isManualReleaseLock = false)
+    @LockAction(keepMills = 60 * 1000, msg = "正在配账中，避免重复还款，请5-10分钟后再试", isManualReleaseLock = false)
     public Result submitRepaymentOrder(@RedisParameterLocked Integer idPerson) {
         Result result = new Result();
 

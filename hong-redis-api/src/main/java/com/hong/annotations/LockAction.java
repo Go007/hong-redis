@@ -13,7 +13,7 @@ public @interface LockAction {
      * 锁的资源，key。支持spring El表达式
      */
     @AliasFor("key")
-    String value() default "'default'";
+    String value() default "";
 
     /**
      * 持锁时间,单位毫秒
