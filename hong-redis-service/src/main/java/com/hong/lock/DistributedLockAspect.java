@@ -5,7 +5,6 @@ import com.hong.annotations.RedisParameterLocked;
 import com.hong.common.bean.Result;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -51,13 +50,19 @@ public class DistributedLockAspect {
 	/**
 	 * 针对类的切点使用@within ， @annotation是针对方法的
 	 */
-	@Pointcut("@annotation(com.hong.annotations.LockAction)")
+/*	@Pointcut("@annotation(com.hong.annotations.LockAction)")
 	private void lockPoint(){ }
 	
 	@Around("lockPoint()")
-	public Object around(ProceedingJoinPoint pjp) throws Throwable{
+	public Object around(ProceedingJoinPoint pjp) throws Throwable{*/
+	@Around("@annotation(lockAction)")
+	public Object around(ProceedingJoinPoint pjp,LockAction lockAction) throws Throwable{
+		/**
+		 * Method method = ((MethodSignature) pjp.getSignature()).getMethod();
+		 * TODO 这种方式当目标类存在接口时,获取不到目标类方法上的注解,没搞明白啥原因?
+		 * LockAction lockAction = method.getAnnotation(LockAction.class);
+		 */
 		Method method = ((MethodSignature) pjp.getSignature()).getMethod();
-		LockAction lockAction = method.getAnnotation(LockAction.class);
 		String key = lockAction.value();
 		Object[] args = pjp.getArgs();
 		// 如果不特别指定key,则自动生成key
