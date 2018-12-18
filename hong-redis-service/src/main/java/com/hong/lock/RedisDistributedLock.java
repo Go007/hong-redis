@@ -67,7 +67,7 @@ public class RedisDistributedLock extends AbstractDistributedLock {
             }
             result = setRedis(key, expire);
         }
-        logger.info(result ? "get lock success : " + "lockKey" : "get lock failed : " + "lockKey");
+        logger.info(result ? "get lock success : " + key : "get lock failed : " + key);
         return result;
     }
 
