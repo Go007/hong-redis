@@ -2,7 +2,7 @@ spring:
   application:
     name: hong-redis
   profiles:
-    active: test
+    active: dev
 
   http:
     encoding:
