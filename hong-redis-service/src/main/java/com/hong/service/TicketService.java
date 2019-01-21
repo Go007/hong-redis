@@ -41,7 +41,7 @@ public class TicketService {
                 //缓存重建
                 //value = databaseService.queryFromDb(ticketSeq); //模拟从数据库中查询
                 value = "100";
-
+                logger.info(Thread.currentThread().getName() + "从数据库中取得数据:" + value);
                 //塞到缓存
                 redisService.set(ticketSeq, value, 5 * 60 * 1000);
 
@@ -58,7 +58,7 @@ public class TicketService {
                  */
                 //value = bakRedisService.get(ticketSeq);
                 if (value != null) {
-                    logger.info(Thread.currentThread().getName() + "缓存降级，从备份从缓存中取得数据:" + value);
+                    logger.info(Thread.currentThread().getName() + "缓存降级，从备份缓存中取得数据:" + value);
                 } else {
                     value = "0";
                 }

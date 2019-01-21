@@ -1,6 +1,7 @@
 package com.hong;
 
 import com.hong.service.RedisService;
+import com.hong.service.TicketService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +22,9 @@ public class TestRedis {
 
     @Autowired
     private RedisService redisService;
+
+    @Autowired
+    private TicketService ticketService;
 
     @Test
     public void test() throws Exception {
@@ -61,7 +65,7 @@ public class TestRedis {
             Thread thread = new Thread(() -> {
                 try {
                     cdl.await();
-                    // xxService.doXx();
+                   ticketService.queryTicketStock("K888");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
