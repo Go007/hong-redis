@@ -12,15 +12,16 @@ public class RedisClient {
     Socket connection;
 
     public RedisClient() throws IOException {
-        connection = new Socket("127.0.0.1",6379);
+        connection = new Socket("127.0.0.1", 6379);
     }
 
     /**
      * 模拟客户端 set key value操作
+     *
      * @param key
      * @param value
      */
-    public void set(String key,String value) throws IOException {
+    public void set(String key, String value) throws IOException {
         /**
          * 协议约定如下：
          * *参数个数 \r\n
@@ -34,14 +35,14 @@ public class RedisClient {
          * 而Redis为了追求高效的读写，采取自定义的简单协议。
          */
         // 1.协议组装,注意一定要getBytes()，否则传输中文会报错，因为网络传输时以字节为单位的
-        StringBuilder sb = new StringBuilder();
-        sb.append("*3").append("\r\n")
-          .append("$3").append("\r\n")
-          .append("SET\r\n")
-          .append("$").append(key.getBytes().length).append("\r\n")
-          .append(key).append("\r\n")
-          .append("$").append(value.getBytes().length).append("\r\n")
-          .append(value).append("\r\n");
+        StringBuilder command = new StringBuilder();
+        command.append("*3").append("\r\n")
+                .append("$3").append("\r\n")
+                .append("SET\r\n")
+                .append("$").append(key.getBytes().length).append("\r\n")
+                .append(key).append("\r\n")
+                .append("$").append(value.getBytes().length).append("\r\n")
+                .append(value).append("\r\n");
 
         /**
          *3
@@ -54,15 +55,47 @@ public class RedisClient {
 
          sb的输出将会被记录在aof文件中
          */
-        System.out.println(sb);
+       // System.out.println(command);
 
-       //2.将按协议组装好的数据发送给redis server
-        connection.getOutputStream().write(sb.toString().getBytes());
+        //2.将按协议组装好的数据发送给redis server
+        connection.getOutputStream().write(command.toString().getBytes());
 
         //3.读取redis server的响应
         byte[] response = new byte[1024];
         connection.getInputStream().read(response);
-        System.out.println(new String(response));//+OK
+      //  System.out.println("set接收到响应：" + new String(response));//+OK
+    }
+
+    /**
+     * 管道机制批量操作
+     *
+     * @param key
+     * @param value
+     * @throws IOException
+     */
+    public void pipelineSet(String key, String value) throws IOException {
+        StringBuilder command = new StringBuilder();
+        command.append("*3").append("\r\n")
+                .append("$3").append("\r\n")
+                .append("SET\r\n")
+                .append("$").append(key.getBytes().length).append("\r\n")
+                .append(key).append("\r\n")
+                .append("$").append(value.getBytes().length).append("\r\n")
+                .append(value).append("\r\n");
+
+        // 不断发送数据
+        connection.getOutputStream().write(command.toString().getBytes());
+    }
+
+    /**
+     * 获取管道执行的结果
+     *
+     * @throws IOException
+     */
+    public void pipelineResponse() throws IOException {
+        byte[] response = new byte[1024];
+        connection.getInputStream().read(response);
+        System.out.println("pipelineSet接收到响应：" + new String(response));
     }
 
     public static void main(String[] args) throws IOException {
@@ -77,6 +110,19 @@ public class RedisClient {
         System.out.println(new String(response));*/
 
         RedisClient redisClient = new RedisClient();
-        redisClient.set("hello","redis");
+        /**
+         * 对比使用常规的set操作和pipelineSet操作10000条数据耗时
+         */
+        long s0 = System.currentTimeMillis();
+
+      /*  for (int i=0;i<10000;i++){
+            redisClient.set("hello_" + i, "redis");
+        }
+        System.out.println("set操作耗时：" + (System.currentTimeMillis() - s0) + "ms"); // 970ms
+*/
+        for (int i=0;i<10000;i++){
+            redisClient.pipelineSet("hello_" + i, "redis");
+        }
+        System.out.println("pipelineSet操作耗时：" + (System.currentTimeMillis() - s0) + "ms"); // 280ms
     }
 }
