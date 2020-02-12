@@ -27,3 +27,7 @@ Spring Cache默认是不支持在@Cacheable上添加过期时间的，可以在�
 
 # Spring Cache在缓存失效前自动刷新
 https://www.cnblogs.com/ASPNET2008/p/6511500.html
+
+# Redis 可视化管理界面
+https://blog.csdn.net/haoxiaoyong1014/article/details/84143311
+https://blog.csdn.net/Wjhsmart/article/details/86497136
