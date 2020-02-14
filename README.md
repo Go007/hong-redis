@@ -31,3 +31,13 @@ https://www.cnblogs.com/ASPNET2008/p/6511500.html
 # Redis 可视化管理界面
 https://blog.csdn.net/haoxiaoyong1014/article/details/84143311
 https://blog.csdn.net/Wjhsmart/article/details/86497136
+
+# redisTemplate使用scan模糊匹配key  & 分页查询key pattern列表
+https://www.jianshu.com/p/4cddceccf9f9
+https://blog.csdn.net/lsblsb/article/details/73692771
+
+# org.springframework.data.redis.serializer.SerializationException: Cannot serialize
+https://blog.csdn.net/wanglei598816425/article/details/90174715
+
+# Spring Boot缓存实战 Redis 设置有效时间和自动刷新缓存，时间支持在配置文件中配置
+https://www.jianshu.com/p/275cb42080d9
