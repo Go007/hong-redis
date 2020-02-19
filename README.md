@@ -41,3 +41,6 @@ https://blog.csdn.net/wanglei598816425/article/details/90174715
 
 # Spring Boot缓存实战 Redis 设置有效时间和自动刷新缓存，时间支持在配置文件中配置
 https://www.jianshu.com/p/275cb42080d9
+
+# Springboot2.0整合Redis缓存 + Ehcache缓存，在Spring Boot中配置多个cache，实现多个cacheManager灵活切换
+https://blog.csdn.net/fangchao2011/article/details/90296676?utm_source=distribute.pc_relevant.none-task
