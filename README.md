@@ -44,3 +44,7 @@ https://www.jianshu.com/p/275cb42080d9
 
 # Springboot2.0整合Redis缓存 + Ehcache缓存，在Spring Boot中配置多个cache，实现多个cacheManager灵活切换
 https://blog.csdn.net/fangchao2011/article/details/90296676?utm_source=distribute.pc_relevant.none-task
+
+# spring中的@Bean是否一定要与@Configuration一起用
+
+Consider renaming one of the beans or enabling overriding by setting spring.main.allow-bean-definition-overriding=true
